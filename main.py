@@ -13,13 +13,14 @@ if __name__ == "__main__":
     pygame.init()
     end = False
     reloj = pygame.time.Clock()
+    points = 50
     window = pygame.display.set_mode([width,high])
     Player1 = Jugador()
     PlayersList = pygame.sprite.Group()
     PlayersList.add(Player1)
     Rivals = pygame.sprite.Group()
     Balas = pygame.sprite.Group()
-    QuantityRivals = 10
+    QuantityRivals = 20
     for i in range(QuantityRivals):
         x = 1000
         y = random.randrange(high)
@@ -48,7 +49,12 @@ if __name__ == "__main__":
                 Balas.remove(b)
             if b.getDistance() == 50:
                 Balas.remove(b)
+        #Colision
+        ls_col = pygame.sprite.spritecollide(Player1, Rivals, False)
+        for r in ls_col:
+            points -= 1
         #Refrescar
+        print points
         Rivals.update()
         Balas.update()
         window.fill([0,0,0])
