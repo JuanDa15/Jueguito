@@ -20,11 +20,12 @@ if __name__ == "__main__":
     PlayersList.add(Player1)
     Rivals = pygame.sprite.Group()
     Balas = pygame.sprite.Group()
-    QuantityRivals = 20
+    BalasEnemigas = pygame.sprite.Group()
+    QuantityRivals = 2
     for i in range(QuantityRivals):
         x = 1000
         y = random.randrange(high)
-        vx = -1*random.randrange(15)
+        vx = -1*random.randrange(1,10)
         vy = 0
         r = Rival([x,y],vx,vy)
         Rivals.add(r)
@@ -43,24 +44,40 @@ if __name__ == "__main__":
                 position = event.pos
                 PlayersList.update(position)
         #Control
+        #Control Rivales
+        for r in Rivals:
+            if r.timer < 0:
+                position = r.ReturnPosition()
+                bullet = RivalBullets(position)
+                BalasEnemigas.add(bullet)
+                r.timer = 60
         #Limpieza
         for b in Balas:
+            #BulletsCollision = pygame.sprite.spritecollide(b, Rivals, True)
             if b.rect.x > (width + b.rect.w):
                 Balas.remove(b)
-            if b.getDistance() == 50:
+            if b.getDistance() == 35:
                 Balas.remove(b)
+        for b in BalasEnemigas:
+            #BulletsCollision = pygame.sprite.spritecollide(b, Rivals, True)
+            #for r in BulletsCollision:
+            #    Balas.remove(b)
+            if b.rect.x < (0 + b.rect.w):
+                BalasEnemigas.remove(b)
+            if b.getDistance() == 75:
+                BalasEnemigas.remove(b)
         BulletRivalsColl = pygame.sprite.groupcollide(Balas, Rivals, True, True)
+        BulletRivalsColl = pygame.sprite.groupcollide(BalasEnemigas, PlayersList, True, False)
         #Colision
         PlayerCollision = pygame.sprite.spritecollide(Player1, Rivals, True)
-        for r in PlayerCollision:
-            points += 1
         #Refrescar
-        print points
         Rivals.update()
+        BalasEnemigas.update()
         Balas.update()
         window.fill([0,0,0])
         Rivals.draw(window)
         Balas.draw(window)
+        BalasEnemigas.draw(window)
         PlayersList.draw(window)
         pygame.display.flip()
         reloj.tick(60)

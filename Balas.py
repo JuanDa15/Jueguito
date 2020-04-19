@@ -35,9 +35,14 @@ class RivalBullets(bullets):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.image.load('Bala Rival.png')
         self.rect = self.image.get_rect()
-        self.rect.x = pos
-        self.rect.y = pos
-        self.velocityX = -2
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]
+        self.distance = 0
+        self.velocityX = -12
         
     def update(self):
         self.rect.x += self.velocityX
+        self.distance += 1
+
+    def getDistance(self):
+        return self.distance
