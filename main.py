@@ -49,9 +49,10 @@ if __name__ == "__main__":
                 Balas.remove(b)
             if b.getDistance() == 50:
                 Balas.remove(b)
+        BulletRivalsColl = pygame.sprite.groupcollide(Balas, Rivals, True, True)
         #Colision
-        ls_col = pygame.sprite.spritecollide(Player1, Rivals, True)
-        for r in ls_col:
+        PlayerCollision = pygame.sprite.spritecollide(Player1, Rivals, True)
+        for r in PlayerCollision:
             points += 1
         #Refrescar
         print points
