@@ -315,3 +315,5 @@ def SelectColor(ColorName):
         return [200,200,200]
     if ColorName == 'Gray3':
         return [50,50,50]
+    if ColorName == 'Black':
+        return [0,0,0]

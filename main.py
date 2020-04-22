@@ -7,14 +7,34 @@ from LibreriaGeneral import *
 #--------------------------------------------
 width = 1080
 high = 720
+pygame.init()
+window = pygame.display.set_mode([width,high])
 #---------------------------------------------
 if __name__ == "__main__":
-    #DefinicionVariables
-    pygame.init()
+    #seccion antes del juego
+    music = pygame.mixer.Sound('Intergalactic Odyssey.ogg')
+    FuentePre = pygame.font.Font(None, 40)
+    Tittle = FuentePre.render('Cosita',True,SelectColor('White'))
+    music.play(-1)
     end = False
+    endPrev = False
+    while (not end) and (not endPrev):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                end = True
+            if event.type == pygame.KEYDOWN:
+                endPrev = True
+        window.blit(Tittle,[500,250])
+        pygame.display.flip()
+    music.stop()
+    #seccion del juego
+    #DefinicionVariables
+    BulletSound = pygame.mixer.Sound('laser8.wav')
+    fuentej = pygame.font.Font(None, 32)
+    #end = False
+    EndGame = False
     reloj = pygame.time.Clock()
     points = 0
-    window = pygame.display.set_mode([width,high])
     Player1 = Jugador()
     PlayersList = pygame.sprite.Group()
     PlayersList.add(Player1)
@@ -30,7 +50,7 @@ if __name__ == "__main__":
         r = Rival([x,y],vx,vy)
         Rivals.add(r)
         
-    while not end:
+    while not end and not EndGame:
         #Gestion Eventos
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -40,6 +60,7 @@ if __name__ == "__main__":
                     position = Player1.ReturnPosition()
                     bullet = PlayerBullets(position)
                     Balas.add(bullet)
+                    BulletSound.play()
             if event.type == pygame.MOUSEMOTION:
                 position = event.pos
                 PlayersList.update(position)
@@ -68,9 +89,18 @@ if __name__ == "__main__":
                 BalasEnemigas.remove(b)
         BulletRivalsColl = pygame.sprite.groupcollide(Balas, Rivals, True, True)
         BulletRivalsColl = pygame.sprite.groupcollide(BalasEnemigas, PlayersList, True, False)
+        for players in BulletRivalsColl:
+            if players in BulletRivalsColl:
+                Player1.life -= 1
+        
+        for player in PlayersList:
+            if player.life <= 0:
+                EndGame = True
         #Colision
         PlayerCollision = pygame.sprite.spritecollide(Player1, Rivals, True)
         #Refrescar
+        MSG = 'vidas: ' + str(Player1.life)
+        info = fuentej.render(MSG,True,SelectColor('White'))
         Rivals.update()
         BalasEnemigas.update()
         Balas.update()
@@ -78,6 +108,18 @@ if __name__ == "__main__":
         Rivals.draw(window)
         Balas.draw(window)
         BalasEnemigas.draw(window)
+        window.blit(info,[10,10])
         PlayersList.draw(window)
         pygame.display.flip()
         reloj.tick(60)
+    
+    #despues de juego       
+    while not end:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                end = True
+        fuente = pygame.font.Font(None, 34)
+        EndTittle = fuente.render('Fin de Juego', True, SelectColor('White'))
+        window.fill(SelectColor('Black'))
+        window.blit(EndTittle,[width/2,high/2])
+        pygame.display.flip()

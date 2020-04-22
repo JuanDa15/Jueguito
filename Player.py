@@ -12,6 +12,7 @@ class Jugador(pygame.sprite.Sprite):
         self.rect.y = position[1]
         self.velx = 0
         self.vely = 0
+        self.life = 3
         
     def update(self,pos):
         self.rect.x = pos[0] - 32
