@@ -2,6 +2,7 @@ import pygame
 import random
 from Player import *
 from Rivales import *
+from Life import *
 from Balas import *
 from LibreriaGeneral import *
 #--------------------------------------------
@@ -34,7 +35,6 @@ if __name__ == "__main__":
     #end = False
     EndGame = False
     reloj = pygame.time.Clock()
-    points = 0
     Player1 = Jugador()
     PlayersList = pygame.sprite.Group()
     PlayersList.add(Player1)
@@ -99,16 +99,22 @@ if __name__ == "__main__":
         #Colision
         PlayerCollision = pygame.sprite.spritecollide(Player1, Rivals, True)
         #Refrescar
-        MSG = 'vidas: ' + str(Player1.life)
-        info = fuentej.render(MSG,True,SelectColor('White'))
         Rivals.update()
         BalasEnemigas.update()
         Balas.update()
         window.fill([0,0,0])
+        if Player1.life == 3:
+            LifeImage = pygame.image.load('3Hearts.png')
+            window.blit(LifeImage,[10,10])
+        elif Player1.life == 2:
+            LifeImage = pygame.image.load('2Hearts.png')
+            window.blit(LifeImage,[10,10])
+        elif Player1.life == 1:
+            LifeImage = pygame.image.load('Hearts.png')
+            window.blit(LifeImage,[10,10])
         Rivals.draw(window)
         Balas.draw(window)
         BalasEnemigas.draw(window)
-        window.blit(info,[10,10])
         PlayersList.draw(window)
         pygame.display.flip()
         reloj.tick(60)
