@@ -2,7 +2,6 @@ import pygame
 import random
 from Player import *
 from Rivales import *
-from Life import *
 from Balas import *
 from LibreriaGeneral import *
 #--------------------------------------------
